@@ -12,14 +12,10 @@ async def buyout(callback: CallbackQuery):
 
 
 
-
-
-@buyout_router.callback_query(F.data == 'back')
-async def contact_back(callback: CallbackQuery):
-    await callback.message.edit_text(
-        text=service_text.description,
-        reply_markup=keyboard.start_kbd
-    )
+@buyout_router.callback_query(F.data == "back")
+async def return_main(callback: CallbackQuery):
+    await callback.message.answer(text=service_text.welcome, reply_markup=keyboard.start_kbd)
     await callback.answer()
+
 
 

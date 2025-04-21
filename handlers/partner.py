@@ -53,7 +53,7 @@ def get_partner_keyboard(index: int) -> InlineKeyboardMarkup:
         keyboard_rows.append(navigation_buttons)
 
     # Кнопка "Назад"
-    back_button = InlineKeyboardButton(text="⬅️ Назад", callback_data="back")
+    back_button = InlineKeyboardButton(text="⬅️ Вернуться в главное меню", callback_data="back-main")
     keyboard_rows.append([back_button])
 
     return InlineKeyboardMarkup(inline_keyboard=keyboard_rows)
@@ -119,24 +119,7 @@ async def partner_button(callback: CallbackQuery):
 
 
 
-
-# Обработчик кнопки "Назад"
-@partner_router.callback_query(F.data == 'back')
+@partner_router.callback_query(F.data == 'back-main')
 async def back_button(callback: CallbackQuery):
-    try:
-        # Удаляем текущее сообщение с партнерами
-        await callback.message.delete()
-        # Отправляем новое сообщение с главным меню
-        await callback.message.answer(
-            text="Выберите раздел:",
-            reply_markup=keyboard.start_kbd
-        )
-    except Exception as e:
-        logger.error(f"Error in back_button: {e}")
-        # В случае ошибки пытаемся отправить новое сообщение
-        await callback.message.answer(
-            text="Выберите раздел:",
-            reply_markup=keyboard.start_kbd
-        )
-
-    await callback.answer()
+   await callback.message.edit_text(text = service_text.welcome, reply_markup=keyboard.back_main)
+   await callback.answer()

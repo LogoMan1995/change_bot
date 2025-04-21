@@ -31,4 +31,8 @@ back_button = InlineKeyboardMarkup(
 )
 
 
+back_main = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text="⬅️ Вернуться в главное меню", callback_data="back-main")]
+])
+
 

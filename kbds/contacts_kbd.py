@@ -24,6 +24,15 @@ website_kb = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text="⬅️ Назад", callback_data="back")]
 ])
 
+
+
+
+
+# Назад (для сайта и геолокации)
+back_main = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text="⬅️ Вернуться в главное меню", callback_data="back-main")]
+])
+
 # Назад (для сайта и геолокации)
 back_only_kb = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text="⬅️ Назад", callback_data="back")]
