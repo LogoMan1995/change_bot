@@ -89,7 +89,7 @@ async def show_online(callback: CallbackQuery):
 
 
 
-@contact_router.callback_query(F.data == 'back')
+@contact_router.callback_query(F.data == 'back-contacts')
 async def back_button(callback: CallbackQuery):
    await callback.message.edit_text(text = service_text.description, reply_markup=contact_kb.company_info_kb)
    await callback.answer()

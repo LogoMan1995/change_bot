@@ -14,14 +14,14 @@ contacts_menu_kb = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text="💼 Отдел продаж", callback_data="contact_sales")],
     [InlineKeyboardButton(text="🔧 Сервисный отдел", callback_data="contact_service")],
     [InlineKeyboardButton(text="🔩 Отдел запчастей", callback_data="contact_parts")],
-    [InlineKeyboardButton(text="⬅️ Назад", callback_data="back")]
+    [InlineKeyboardButton(text="⬅️ Назад", callback_data="back-contacts")]
 ])
 
 
 website_kb = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text="🌐 Перейти на сайт", url="https://kts77.ru/")],
     [InlineKeyboardButton(text="📧 Написать на почту", url='https://mail.yandex.ru/compose?to=info@kts77.ru')],
-    [InlineKeyboardButton(text="⬅️ Назад", callback_data="back")]
+    [InlineKeyboardButton(text="⬅️ Назад", callback_data="back-contacts")]
 ])
 
 
@@ -35,5 +35,5 @@ back_main = InlineKeyboardMarkup(inline_keyboard=[
 
 # Кнопка возврата назад
 back_only_kb = InlineKeyboardMarkup(inline_keyboard=[
-    [InlineKeyboardButton(text="⬅️ Назад", callback_data="back")]
+    [InlineKeyboardButton(text="⬅️ Назад", callback_data="back-contacts")]
 ])
