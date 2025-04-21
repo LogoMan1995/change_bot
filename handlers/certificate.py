@@ -64,12 +64,20 @@ async def show_certification(callback: CallbackQuery):
     image_path = IMAGE_FOLDER + certificates[index]
     caption = f"<b>📜 Сертификат {index + 1}/{len(certificates)} 📜</b>"
 
-    await callback.message.answer_photo(
-        photo=FSInputFile(image_path),
-        caption=caption,
-        reply_markup=get_certificate_keyboard(index),
-        parse_mode="HTML"
-    )
+    try:
+        # Пытаемся отредактировать существующее сообщение
+        media = InputMediaPhoto(media=FSInputFile(image_path), caption=caption, parse_mode="HTML")
+        await callback.message.edit_media(media=media, reply_markup=get_certificate_keyboard(index))
+    except Exception as e:
+        logger.error(f"Ошибка при редактировании сертификата: {e}")
+        # Если не удалось отредактировать, отправляем новое сообщение
+        await callback.message.answer_photo(
+            photo=FSInputFile(image_path),
+            caption=caption,
+            reply_markup=get_certificate_keyboard(index),
+            parse_mode="HTML"
+        )
+    
     await callback.answer()
 
 
@@ -91,10 +99,11 @@ async def certification_button(callback: CallbackQuery):
     media = InputMediaPhoto(media=FSInputFile(image_path), caption=caption, parse_mode="HTML")
 
     try:
+        # Пытаемся отредактировать существующее сообщение
         await callback.message.edit_media(media=media, reply_markup=get_certificate_keyboard(index))
     except Exception as e:
         logger.error(f"Ошибка при замене сертификата: {e}")
-        await callback.message.delete()
+        # Если не удалось отредактировать, отправляем новое сообщение
         await callback.message.answer_photo(
             photo=FSInputFile(image_path),
             caption=caption,
@@ -107,8 +116,17 @@ async def certification_button(callback: CallbackQuery):
 
 @certificates_router.callback_query(F.data == 'back-main')
 async def back_button(callback: CallbackQuery):
-    await callback.message.edit_text(
-        text=service_text.welcome,
-        reply_markup=keyboard.back_main
-    )
+    welcome_text = service_text.welcome.format(user=callback.from_user.first_name)
+    try:
+        # Пытаемся отредактировать существующее сообщение
+        await callback.message.edit_text(text=welcome_text, reply_markup=keyboard.start_kbd)
+    except Exception as e:
+        logger.error(f"Ошибка при возврате в главное меню: {e}")
+        # Если не удалось отредактировать, удаляем текущее сообщение и отправляем новое
+        try:
+            await callback.message.delete()
+        except Exception as delete_error:
+            logger.error(f"Ошибка при удалении сообщения: {delete_error}")
+        await callback.message.answer(text=welcome_text, reply_markup=keyboard.start_kbd)
+    
     await callback.answer()

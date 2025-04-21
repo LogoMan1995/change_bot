@@ -4,8 +4,10 @@ from aiogram.filters import CommandStart
 
 import information.description as service_text
 import kbds.services_kbd as keyboard
+import logging
 
 service_router = Router()
+logger = logging.getLogger(__name__)
 
 
 @service_router.message(CommandStart())
@@ -55,26 +57,48 @@ async def semitrailer(callback: CallbackQuery):
 
 @service_router.callback_query(F.data == "back_to_services")
 async def back_to_services(callback: CallbackQuery):
-    await callback.message.delete()
-    await callback.message.answer("Выберите услугу:", reply_markup=keyboard.promo)
+    await callback.message.edit_text("Выберите услугу:", reply_markup=keyboard.promo)
     await callback.answer()
     
     
 @service_router.callback_query(F.data == "back-main")
 async def return_main(callback: CallbackQuery):
-    await callback.message.answer(text=service_text.welcome, reply_markup=keyboard.start_kbd)
+    welcome_text = service_text.welcome.format(user=callback.from_user.first_name)
+    try:
+        # Пытаемся отредактировать существующее сообщение
+        await callback.message.edit_text(text=welcome_text, reply_markup=keyboard.start_kbd)
+    except Exception as e:
+        logger.error(f"Ошибка при возврате в главное меню: {e}")
+        # Если не удалось отредактировать, удаляем текущее сообщение и отправляем новое
+        try:
+            await callback.message.delete()
+        except Exception as delete_error:
+            logger.error(f"Ошибка при удалении сообщения: {delete_error}")
+        await callback.message.answer(text=welcome_text, reply_markup=keyboard.start_kbd)
+    
     await callback.answer()
 
 
 async def update_service(callback: CallbackQuery, image_path: str, caption_text: str):
-    media = InputMediaPhoto(media=FSInputFile(image_path), caption=caption_text)
     try:
+        # Пытаемся отредактировать существующее сообщение
+        media = InputMediaPhoto(media=FSInputFile(image_path), caption=caption_text)
         await callback.message.edit_media(media=media, reply_markup=keyboard.back_button)
-    except Exception:
-        # Если редактировать не удаётся (например, сообщение не фото), удалить и отправить заново
-        await callback.message.delete()
-        photo = FSInputFile(image_path)
-        await callback.message.answer_photo(photo=photo, caption=caption_text, reply_markup=keyboard.back_button)
+    except Exception as e:
+        logger.error(f"Ошибка при редактировании сообщения: {e}")
+        # Если сообщение не содержит медиа, удаляем его и отправляем новое
+        try:
+            await callback.message.delete()
+        except Exception as delete_error:
+            logger.error(f"Ошибка при удалении сообщения: {delete_error}")
+        
+        # Отправляем новое сообщение с фото
+        await callback.message.answer_photo(
+            photo=FSInputFile(image_path),
+            caption=caption_text,
+            reply_markup=keyboard.back_button
+        )
+    
     await callback.answer()
 
 

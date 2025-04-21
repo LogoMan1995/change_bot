@@ -2,6 +2,7 @@ from aiogram import F, Router
 from aiogram.types import CallbackQuery, Message
 import information.description as service_text
 import kbds.contacts_kbd as contact_kb
+import kbds.services_kbd as keyboard
 
 contact_router = Router()
 
@@ -97,7 +98,8 @@ async def back_button(callback: CallbackQuery):
 
 
 @contact_router.callback_query(F.data == 'back-main')
-async def back_button(callback: CallbackQuery):
-   await callback.message.edit_text(text = service_text.welcome, reply_markup=contact_kb.start_kbd)
+async def back_to_main(callback: CallbackQuery):
+   welcome_text = service_text.welcome.format(user=callback.from_user.first_name)
+   await callback.message.edit_text(text=welcome_text, reply_markup=keyboard.start_kbd)
    await callback.answer()
 

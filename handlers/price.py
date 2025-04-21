@@ -1,5 +1,5 @@
 from aiogram import Router, F
-from aiogram.types import Message, CallbackQuery
+from aiogram.types import CallbackQuery
 import information.description as service_text
 import kbds.services_kbd as keyboard
 
@@ -14,7 +14,8 @@ async def price(callback: CallbackQuery):
 
 @price_router.callback_query(F.data == 'back-main')
 async def back_button(callback: CallbackQuery):
-   await callback.message.edit_text(text = service_text.welcome, reply_markup=keyboard.start_kbd)
+   welcome_text = service_text.welcome.format(user=callback.from_user.first_name)
+   await callback.message.edit_text(text=welcome_text, reply_markup=keyboard.start_kbd)
    await callback.answer()
 
 

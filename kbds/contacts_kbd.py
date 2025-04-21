@@ -28,12 +28,12 @@ website_kb = InlineKeyboardMarkup(inline_keyboard=[
 
 
 
-# Назад (для сайта и геолокации)
+# Кнопка возврата в главное меню
 back_main = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text="⬅️ Вернуться в главное меню", callback_data="back-main")]
 ])
 
-# Назад (для сайта и геолокации)
+# Кнопка возврата назад
 back_only_kb = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text="⬅️ Назад", callback_data="back")]
 ])
