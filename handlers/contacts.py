@@ -72,8 +72,7 @@ async def geolocation(callback: CallbackQuery):
             "📌 Координаты: <code>55.135484, 37.516621</code>\n"
             "<a href='https://yandex.com.ge/maps/-/CHqRMVk2'>Открыть в Яндекс.Картах</a>"
         ),
-        reply_markup=contact_kb.contacts_menu_kb,
-        parse_mode="HTML"
+        reply_markup=contact_kb.back_only_kb
     )
     await callback.answer()
 
@@ -86,4 +85,19 @@ async def show_online(callback: CallbackQuery):
     )
     await callback.answer()
 
+
+
+
+@contact_router.callback_query(F.data == 'back')
+async def back_button(callback: CallbackQuery):
+   await callback.message.edit_text(text = service_text.description, reply_markup=contact_kb.company_info_kb)
+   await callback.answer()
+
+
+
+
+@contact_router.callback_query(F.data == 'back-main')
+async def back_button(callback: CallbackQuery):
+   await callback.message.edit_text(text = service_text.welcome, reply_markup=contact_kb.start_kbd)
+   await callback.answer()
 

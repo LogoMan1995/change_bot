@@ -7,12 +7,12 @@ buyout_router = Router()
 
 @buyout_router.callback_query(F.data == 'buyout')
 async def buyout(callback: CallbackQuery):
-    await callback.message.edit_text(text=service_text.buyout_full_caption,reply_markup=keyboard.back_button)
+    await callback.message.edit_text(text=service_text.buyout_full_caption,reply_markup=keyboard.back_main)
     await callback.answer()
 
 
 
-@buyout_router.callback_query(F.data == "back")
+@buyout_router.callback_query(F.data == "back-main")
 async def return_main(callback: CallbackQuery):
     await callback.message.answer(text=service_text.welcome, reply_markup=keyboard.start_kbd)
     await callback.answer()
